@@ -97,7 +97,3 @@ console.log("Owned virtual pets:", ownedPets);
 ```
 
 Replace `"YOUR_CANISTER_ID"` and `"YOUR_OWNER_ID"` with your Canister ID and owner identifier.
-
----
-
-This documentation provides an overview of the "Virtual Pet" Canister's functionality and usage. Follow the deployment and testing instructions to interact with the Canister and create and manage your virtual pets. Enjoy taking care of your virtual pets in this fun and creative decentralized application!
