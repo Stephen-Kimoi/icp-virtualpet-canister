@@ -21,6 +21,10 @@ const petStorage = new StableBTreeMap<string, VirtualPet>(0, 44, 1024);
 // Function to create a new virtual pet
 $update;
 export function createVirtualPet(owner: string, name: string, species: string): Result<VirtualPet, string> {
+  if (!owner || !name || !species) {
+    return Result.Err("Invalid input. Owner, name, and species must be provided.");
+  }
+
   const id = uuidv4();
   const newPet: VirtualPet = {
     id,
@@ -39,6 +43,10 @@ export function createVirtualPet(owner: string, name: string, species: string): 
 // Function to feed a virtual pet
 $update;
 export function feedVirtualPet(id: string): Result<VirtualPet, string> {
+  if (!id) {
+    return Result.Err("Invalid input. Pet ID must be provided.");
+  }
+
   return match(petStorage.get(id), {
     Some: (pet) => {
       const currentTime: Time = ic.time();
@@ -56,6 +64,10 @@ export function feedVirtualPet(id: string): Result<VirtualPet, string> {
 // Function to get all virtual pets owned by a user
 $query;
 export function getOwnedVirtualPets(owner: string): Result<Vec<VirtualPet>, string> {
+  if (!owner) {
+    return Result.Err("Invalid input. Owner must be provided.");
+  }
+
   const userPets = petStorage.values().filter((pet) => pet.owner === owner);
   return Result.Ok(userPets);
 }
