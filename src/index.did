@@ -1,0 +1,19 @@
+type VirtualPet = record {
+  id : text;
+  happiness : float64;
+  owner : text;
+  hunger : float64;
+  name : text;
+  createdAt : nat64;
+  lastFed : opt nat64;
+  species : text;
+  health : float64;
+};
+type VirtualPetPayload = record { owner : text; name : text; species : text };
+type _AzleResult = variant { Ok : VirtualPet; Err : text };
+type _AzleResult_1 = variant { Ok : vec VirtualPet; Err : text };
+service : () -> {
+  createVirtualPet : (VirtualPetPayload) -> (_AzleResult);
+  feedVirtualPet : (text) -> (_AzleResult);
+  getOwnedVirtualPets : (text) -> (_AzleResult_1) query;
+}
