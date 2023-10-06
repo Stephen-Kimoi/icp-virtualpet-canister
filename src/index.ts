@@ -27,19 +27,7 @@ const petStorage = new StableBTreeMap<string, VirtualPet>(0, 44, 1024);
 
 // Function to create a new virtual pet
 $update;
-export function createVirtualPet(payload: VirtualPetPayload): Result<VirtualPet, string> {
-  // Validate payload
-  if (!payload.owner || !payload.name || !payload.species) {
-    return Result.Err("Invalid payload: owner, name, and species are required fields.");
-  }
-
-  // Check if a pet with the same name and owner already exists
-  const existingPet = petStorage.values().find(pet => pet.owner === payload.owner && pet.name === payload.name);
-  if (existingPet) {
-    return Result.Err("A pet with the same name and owner already exists.");
-  }
-
-  // Generate unique id
+export function createVirtualPet(owner: string, name: string, species: string): Result<VirtualPet, string> {
   const id = uuidv4();
 
   // Create new pet object with timestamp
@@ -69,16 +57,6 @@ export function createVirtualPet(payload: VirtualPetPayload): Result<VirtualPet,
 // Function to feed a virtual pet
 $update;
 export function feedVirtualPet(id: string): Result<VirtualPet, string> {
-  // Check if the provided id is a valid string
-  if (typeof id !== 'string') {
-    return Result.Err<VirtualPet, string>('id must be a string');
-  }
-
-  // Check if the id is empty
-  if (id === "") {
-    return Result.Err<VirtualPet, string>('id cannot be empty');
-  }
-
   return match(petStorage.get(id), {
     Some: (pet) => {
       // Get the current time
@@ -112,16 +90,8 @@ export function feedVirtualPet(id: string): Result<VirtualPet, string> {
 // Function to get all virtual pets owned by a user
 $query;
 export function getOwnedVirtualPets(owner: string): Result<Vec<VirtualPet>, string> {
-  // Suggestion 1: Instead of filtering all pets in `petStorage`, consider indexing pets by owner for faster lookup.
-  const ownerPets = petStorage.values().filter((pet) => pet.owner === owner);
-
-  // Suggestion 4: Consider adding error handling for the case where no pets are found for the given owner.
-  if (ownerPets.length === 0) {
-    return Result.Err("No pets found for the given owner");
-  }
-
-  // Suggestion 2: Consider using a more specific error message in the `Result` type instead of a generic string.
-  return Result.Ok(ownerPets);
+  const userPets = petStorage.values().filter((pet) => pet.owner === owner);
+  return Result.Ok(userPets);
 }
 
 globalThis.crypto = {
